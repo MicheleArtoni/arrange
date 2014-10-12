@@ -484,6 +484,7 @@ this.arrange = (function(arrange) {
             case 'number':
             case 'boolean':
             case 'date':
+            case 'regexp':
               return value.toString();
           }
 
