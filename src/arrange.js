@@ -596,9 +596,6 @@ this.arrange = (function(arrange) {
   InternalFormatter.prototype.ParseFormat = function(format) {
     format = (format || '').slice(1); // remove the ':'
 
-    if (format === '')
-      return [];
-
     format = format.replace(this.openChar + this.openChar, this.openChar);
     format = format.replace(this.closeChar + this.closeChar, this.closeChar);
 
@@ -767,7 +764,7 @@ this.arrange = (function(arrange) {
     }
 
     // should be unreachable
-    return value.toString();
+    return null;
   };
 
   // Apply the alignment to the value
