@@ -1,5 +1,42 @@
 /** @module format */
 
+/*
+ * The arrange.js library allows you to format strings in easy and performant ways.
+ * 
+ * Supported features include:
+ * 
+ * 	* C#-like formatting
+ * 		arrange('{} {}!', 'Hello', 'World');
+ * 		-> Hello World!
+ * 
+ * 	* Positional arguments
+ * 		arrange('{0} {1} {2} {1} {0}', 'Do', 'Re', 'Mi');
+ * 		-> Do Re Mi Re Do
+ * 
+ * 	* In depth introspection
+ * 		arrange('Code: {code}, Length: {result.length}, Payload: {result}', {
+ * 			code: 200,
+ * 			result: "arrange.js"
+ * 		});
+ * 		-> Code: 200, Length: 10, Payload: arrange.js
+ * 
+ * 	* Number formatting
+ * 		arrange('Normal: {0}, Fixed2: {0:F2}, Exponential: {0:e}', 123);
+ * 		-> Normal: 123, Fixed1: 120, Exponential: 1.23e2
+ * 
+ * 	* Date formatting
+ * 		arrange('arrange.js was first published the {:MM/dd/yyyy}', new Date(2014, 9, 21));
+ * 		-> arrange.js was first published the 09/21/2014
+ * 
+ * 	* Localization
+ * 		var arrangeIt = arrange.createArrange({ locale: 'it' });
+ * 		arrangeIt('arrange.js è stata inizialmente pubblicata il {:d MMMM yyyy}', new Date(2014, 9, 21));
+ * 		-> arrange.js è stata inizialmente pubblicata il 21 settembre 2014
+ * 
+ * 	* And more, including padding, JSON formatting, toString formatting, templates and lazy formatting.
+ *
+ */
+
 this.arrange = (function(arrange) {
   'use strict';
 
