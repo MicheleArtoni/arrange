@@ -625,7 +625,17 @@ this.arrange = (function(arrange) {
 
   // Parse the expression
   InternalFormatter.prototype.ParseExpression = function(stringFormat) {
-    var match = stringFormat.match(this.expressionRx); // Should always succeed
+    var match = stringFormat.match(this.expressionRx);
+
+    // Not a valid expression
+    if (!match) {
+      var text = stringFormat;
+      text = text.replace(this.openChar + this.openChar, this.openChar);
+      text = text.replace(this.closeChar + this.closeChar, this.closeChar);
+
+      return text;
+    }
+
 
     var selector = this.ParseSelector(match[1]);
 
