@@ -2,37 +2,37 @@
 
 /*
  * The arrange.js library allows you to format strings in easy and performant ways.
- * 
+ *
  * Supported features include:
- * 
+ *
  * 	* C#-like formatting
  * 		arrange('{} {}!', 'Hello', 'World');
  * 		-> Hello World!
- * 
+ *
  * 	* Positional arguments
  * 		arrange('{0} {1} {2} {1} {0}', 'Do', 'Re', 'Mi');
  * 		-> Do Re Mi Re Do
- * 
+ *
  * 	* In depth introspection
  * 		arrange('Code: {code}, Length: {result.length}, Payload: {result}', {
  * 			code: 200,
  * 			result: "arrange.js"
  * 		});
  * 		-> Code: 200, Length: 10, Payload: arrange.js
- * 
+ *
  * 	* Number formatting
  * 		arrange('Normal: {0}, Fixed2: {0:F2}, Exponential: {0:e}', 123);
  * 		-> Normal: 123, Fixed1: 120, Exponential: 1.23e2
- * 
+ *
  * 	* Date formatting
  * 		arrange('arrange.js was first published the {:MM/dd/yyyy}', new Date(2014, 9, 21));
  * 		-> arrange.js was first published the 09/21/2014
- * 
+ *
  * 	* Localization
  * 		var arrangeIt = arrange.createArrange({ locale: 'it' });
  * 		arrangeIt('arrange.js è stata inizialmente pubblicata il {:d MMMM yyyy}', new Date(2014, 9, 21));
  * 		-> arrange.js è stata inizialmente pubblicata il 21 settembre 2014
- * 
+ *
  * 	* And more, including padding, JSON formatting, toString formatting, templates and lazy formatting.
  *
  */
@@ -521,6 +521,7 @@ this.arrange = (function(arrange) {
             case 'number':
             case 'boolean':
             case 'date':
+            case 'regexp':
               return value.toString();
           }
 
@@ -577,7 +578,7 @@ this.arrange = (function(arrange) {
     var alignement = '(?:,[+-]?[0-9]+)?';
 
     // Rx: /(?::(?:[^{}]|\{\{|\}\})+)?/
-    var format = '(?::(?:[^' + open + close + ']|' + escapedOpen + '|' + escapedClose + ')+)?';
+    var format = '(?::(?:[^' + open + close + ']|' + escapedOpen + '|' + escapedClose + ')*)?';
 
     var expression = open + '\\s*' + selector + '\\s*' + alignement + '\\s*' + format + '\\s*' + close;
     var exprCapturing = open + '\\s*(' + selector + ')\\s*(' + alignement + ')\\s*(' + format + ')\\s*' + close;
@@ -633,9 +634,6 @@ this.arrange = (function(arrange) {
   InternalFormatter.prototype.ParseFormat = function(format) {
     format = (format || '').slice(1); // remove the ':'
 
-    if (format === '')
-      return [];
-
     format = format.replace(this.openChar + this.openChar, this.openChar);
     format = format.replace(this.closeChar + this.closeChar, this.closeChar);
 
@@ -662,7 +660,16 @@ this.arrange = (function(arrange) {
 
   // Parse the expression
   InternalFormatter.prototype.ParseExpression = function(stringFormat) {
-    var match = stringFormat.match(this.expressionRx); // Should always succeed
+    var match = stringFormat.match(this.expressionRx);
+
+    // Not a valid expression
+    if (!match) {
+      var text = stringFormat;
+      text = text.replace(this.openChar + this.openChar, this.openChar);
+      text = text.replace(this.closeChar + this.closeChar, this.closeChar);
+
+      return text;
+    }
 
     var selector = this.ParseSelector(match[1]);
 
@@ -794,7 +801,7 @@ this.arrange = (function(arrange) {
     }
 
     // should be unreachable
-    return value.toString();
+    return null;
   };
 
   // Apply the alignment to the value
