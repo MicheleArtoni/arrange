@@ -540,7 +540,7 @@ this.arrange = (function(arrange) {
     var alignement = '(?:,[+-]?[0-9]+)?';
 
     // Rx: /(?::(?:[^{}]|\{\{|\}\})+)?/
-    var format = '(?::(?:[^' + open + close + ']|' + escapedOpen + '|' + escapedClose + ')+)?';
+    var format = '(?::(?:[^' + open + close + ']|' + escapedOpen + '|' + escapedClose + ')*)?';
 
     var expression = open + '\\s*' + selector + '\\s*' + alignement + '\\s*' + format + '\\s*' + close;
     var exprCapturing = open + '\\s*(' + selector + ')\\s*(' + alignement + ')\\s*(' + format + ')\\s*' + close;
